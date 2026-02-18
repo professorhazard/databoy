@@ -32,15 +32,15 @@ if not GEMINI_API_KEY:
 
 client = genai.Client(api_key=GEMINI_API_KEY)
 
-app = Flask(__name__, static_folder='.', static_url_path='')
+app = Flask(__name__, static_folder='../frontend', static_url_path='')
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Quiz storage configuration
-QUIZZES_DIR = Path('quizzes')
+QUIZZES_DIR = Path('../quizzes')
 QUIZZES_DIR.mkdir(exist_ok=True)
 
 # D³ Engine storage configuration
-D3_DIR = Path('d3_analyses')
+D3_DIR = Path('../d3_analyses')
 D3_DIR.mkdir(exist_ok=True)
 
 MODEL_NAME = "gemini-2.5-flash"  # or "gemini-2.5-flash-latest"
