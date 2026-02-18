@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databoy | Study Only What Exams Actually Test</title>
+    <meta name="description"
+        content="Databoy filters study material to show you only what exams actually test. Smart quizzes, surgical filtering, and performance insights.">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-bolt logo-icon"></i>
+                Databoy
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="#hero">Home</a>
+                <a href="#features">Features</a>
+                <a href="#comparison">Why Us</a>
+                <a href="app_demo.html" class="nav-cta">Try Demo</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="badge">
+                    <span class="badge-icon"><i class="fas fa-check-circle"></i></span>
+                    <span class="badge-text">Exam-Focused Intelligence</span>
+                </div>
+                <h1 class="hero-title">Study Only What <span class="highlight">Exams Actually Test</span></h1>
+                <p class="hero-description">
+                    Stop wasting time on fluff. Databoy uses crowdsourced intelligence from notes, lectures, and past
+                    papers to surgically filter out unnecessary information, so you focus 100% on passing.
+                </p>
+                <div class="hero-btns">
+                    <a href="dashboard.html" class="btn btn-primary">
+                        Start for Free <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#features" class="btn btn-secondary">
+                        <i class="fas fa-play"></i> See How It Works
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">80%</span>
+                        <span class="stat-label">Less Reading</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value">2x</span>
+                        <span class="stat-label">Retention Rate</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <span class="stat-value">10k+</span>
+                        <span class="stat-label">Past Papers</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="app-card floating">
+                    <div class="card-header">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="quiz-item">
+                            <div class="quiz-badge">High Yield</div>
+                            <h4>Kirchhoff's Current Law</h4>
+                            <p>Sum of currents entering a junction equals...</p>
+                            <div class="fake-options">
+                                <div class="fake-opt active">Sum of currents leaving</div>
+                                <div class="fake-opt">Total resistance</div>
+                                <div class="fake-opt">Voltage drop</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="blur-circle circle-1"></div>
+                <div class="blur-circle circle-2"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison" class="comparison">
+        <div class="container">
+            <div class="section-header text-center">
+                <h2>Why Databoy Wins</h2>
+                <p>Don't just summarize. Analyze relevance.</p>
+            </div>
+
+            <div class="comparison-grid">
+                <!-- Generic AI Card -->
+                <div class="compare-card generic">
+                    <div class="card-icon"><i class="fas fa-robot"></i></div>
+                    <h3>Generic AI Summarizers</h3>
+                    <ul class="compare-list">
+                        <li class="negative"><i class="fas fa-times"></i> Treats all text as equal</li>
+                        <li class="negative"><i class="fas fa-times"></i> Summarizes everything blindly</li>
+                        <li class="negative"><i class="fas fa-times"></i> Misses exam nuances</li>
+                        <li class="negative"><i class="fas fa-times"></i> Expensive subscriptions</li>
+                    </ul>
+                </div>
+
+                <!-- Databoy Card -->
+                <div class="compare-card databoy">
+                    <div class="popular-badge">Recommended for Students</div>
+                    <div class="card-icon"><i class="fas fa-bolt"></i></div>
+                    <h3>Databoy</h3>
+                    <ul class="compare-list">
+                        <li class="positive"><i class="fas fa-check"></i> <strong>Ranks by Exam Relevance</strong></li>
+                        <li class="positive"><i class="fas fa-check"></i> Converts into <strong>Active Recall
+                                Quizzes</strong></li>
+                        <li class="positive"><i class="fas fa-check"></i> <strong>Surgical Filtering</strong> of noise
+                        </li>
+                        <li class="positive"><i class="fas fa-check"></i> <strong>Affordable</strong> for developing
+                            nations</li>
+                    </ul>
+                    <a href="app_demo.html" class="btn btn-primary full-width">Switch to Databoy</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Built for <span class="highlight">Results</span></h2>
+                <p>Everything you need to ace the exam, nothing you don't.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Feature 1 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    <h3>Surgical Filtering</h3>
+                    <p>We analyze thousands of past papers to strip away the fluff. Read only the 20% that scores 80% of
+                        the marks.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Smart Quiz Generation</h3>
+                    <p>Passive reading is for amateurs. Databoy instantly converts your notes into active recall
+                        quizzes.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Performance Insights</h3>
+                    <p>Track your retention rates and identify weak spots before you walk into the exam hall.</p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="feature-card">
+                    <div class="feature-icon-box">
+                        <i class="fas fa-hand-holding-dollar"></i>
+                    </div>
+                    <h3>Affordable Access</h3>
+                    <p>Top-tier education technology shouldn't break the bank. Localized pricing for students
+                        everywhere.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Ready to Hack Your Grades?</h2>
+                <p>Join thousands of students studying smarter, not harder.</p>
+                <a href="app_demo.html" class="btn btn-primary btn-large">Try Databoy Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <i class="fas fa-bolt logo-icon"></i>
+                        Databoy
+                    </a>
+                    <p>Smart revision for the modern student.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Product</h4>
+                        <a href="#features">Features</a>
+                        <a href="#comparison">Pricing</a>
+                        <a href="app_demo.html">Demo</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Company</h4>
+                        <a href="#">About</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Databoy. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

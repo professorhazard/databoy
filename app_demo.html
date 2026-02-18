@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databoy | Smart Revision</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── Reset & Base ─────────────────────────────────────────── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Top Nav ──────────────────────────────────────────────── */
+        .app-nav {
+            background: var(--bg-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .app-nav .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .app-nav .logo i {
+            color: var(--accent-green);
+        }
+
+        .app-nav .nav-links-app {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-tab {
+            padding: 0.5rem 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-tab.active {
+            color: var(--accent-green);
+            background: rgba(100, 255, 218, 0.08);
+            border-color: rgba(100, 255, 218, 0.2);
+        }
+
+        /* ── Two-Panel Layout ─────────────────────────────────────── */
+        .workspace {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .panel {
+            padding: 2rem;
+            overflow-y: auto;
+            height: calc(100vh - 65px);
+        }
+
+        .panel-left {
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .panel-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .panel-header h2 i {
+            color: var(--accent-green);
+            font-size: 1.1rem;
+        }
+
+        .panel-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* ── Upload Zone (Smart Revision) ─────────────────────────── */
+        .upload-zone {
+            border: 2px dashed rgba(100, 255, 218, 0.25);
+            border-radius: 14px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: rgba(100, 255, 218, 0.02);
+            position: relative;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: var(--accent-green);
+            background: rgba(100, 255, 218, 0.06);
+        }
+
+        .upload-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-zone .upload-icon-big {
+            font-size: 3rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .upload-zone h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-zone p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .upload-zone .file-types {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .file-badge {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* ── Processing State ─────────────────────────────────────── */
+        .processing-state {
+            display: none;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .processing-state.active {
+            display: block;
+        }
+
+        .spinner-ring {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(100, 255, 218, 0.15);
+            border-top-color: var(--accent-green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 1.2rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .process-steps {
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+
+        .process-step {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.6rem 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .process-step.done {
+            color: var(--accent-green);
+        }
+
+        .process-step.active {
+            color: var(--text-primary);
+        }
+
+        .process-step i {
+            width: 18px;
+            text-align: center;
+        }
+
+        /* ── Quiz Panel ───────────────────────────────────────────── */
+        .quiz-empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .quiz-empty-state i {
+            font-size: 3rem;
+            opacity: 0.3;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-progress {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .quiz-score-badge {
+            background: rgba(100, 255, 218, 0.1);
+            color: var(--accent-green);
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            border-radius: 20px;
+            padding: 0.3rem 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .progress-bar-wrap {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            height: 4px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--accent-green);
+            border-radius: 4px;
+            transition: width 0.4s ease;
+        }
+
+        .question-card {
+            background: var(--bg-light);
+            border-radius: 14px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .question-number {
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.8rem;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.6;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.2rem;
+            border-radius: 10px;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 0.7rem;
+            user-select: none;
+        }
+
+        .option:hover:not(.locked) {
+            border-color: rgba(100, 255, 218, 0.4);
+            background: rgba(100, 255, 218, 0.04);
+        }
+
+        .option.selected {
+            border-color: var(--accent-green);
+            background: rgba(100, 255, 218, 0.08);
+        }
+
+        .option.correct {
+            border-color: #64ffda;
+            background: rgba(100, 255, 218, 0.12);
+            color: var(--accent-green);
+        }
+
+        .option.wrong {
+            border-color: #ff5f56;
+            background: rgba(255, 95, 86, 0.08);
+            color: #ff5f56;
+        }
+
+        .option.locked {
+            cursor: default;
+        }
+
+        .radio-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .option.selected .radio-circle,
+        .option.correct .radio-circle {
+            border-color: var(--accent-green);
+            background: var(--accent-green);
+        }
+
+        .option.wrong .radio-circle {
+            border-color: #ff5f56;
+            background: #ff5f56;
+        }
+
+        .radio-circle::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            display: none;
+        }
+
+        .option.selected .radio-circle::after,
+        .option.correct .radio-circle::after,
+        .option.wrong .radio-circle::after {
+            display: block;
+        }
+
+        .feedback-box {
+            display: none;
+            padding: 1rem 1.2rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .feedback-box.correct {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(100, 255, 218, 0.08);
+            color: var(--accent-green);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+        }
+
+        .feedback-box.wrong {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(255, 95, 86, 0.08);
+            color: #ff5f56;
+            border: 1px solid rgba(255, 95, 86, 0.2);
+        }
+
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        /* ── Results Screen ───────────────────────────────────────── */
+        .results-screen {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-green);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            background: rgba(100, 255, 218, 0.05);
+        }
+
+        .score-circle .score-num {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            line-height: 1;
+        }
+
+        .score-circle .score-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .detailed-results-container {
+            margin-top: 2rem;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .detailed-results {
+            max-height: 400px;
+            overflow-y: auto;
+            border-radius: 8px;
+            background: var(--bg-light);
+            padding: 1rem;
+        }
+
+        .result-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .result-item.correct {
+            background: rgba(100, 255, 218, 0.05);
+            border-left-color: var(--accent-green);
+        }
+
+        .result-item.incorrect {
+            background: rgba(255, 100, 100, 0.05);
+            border-left-color: #ff6464;
+        }
+
+        .result-question {
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .result-answer {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .correct-answer {
+            color: var(--accent-green);
+        }
+
+        .wrong-answer {
+            color: #ff6464;
+        }
+
+        /* ── Road Map Panel ───────────────────────────────────────── */
+        .roadmap-upload-area {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .source-card {
+            background: var(--bg-light);
+            border: 1.5px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .source-card input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .source-card:hover {
+            border-color: var(--accent-green);
+            background: rgba(100, 255, 218, 0.04);
+        }
+
+        .source-card.uploaded {
+            border-style: solid;
+            border-color: var(--accent-green);
+        }
+
+        .source-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(100, 255, 218, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-green);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .source-info h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .source-info p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .source-status {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .source-card.uploaded .source-status {
+            color: var(--accent-green);
+        }
+
+        .roadmap-output {
+            margin-top: 1.5rem;
+        }
+
+        .roadmap-topic {
+            background: var(--bg-light);
+            border-radius: 10px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .topic-rank {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(100, 255, 218, 0.1);
+            color: var(--accent-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .topic-details {
+            flex: 1;
+        }
+
+        .topic-details h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .topic-details p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .topic-bar-wrap {
+            width: 80px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .topic-bar {
+            height: 100%;
+            background: var(--accent-green);
+            border-radius: 4px;
+        }
+
+        /* ── Buttons ──────────────────────────────────────────────── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.4rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--accent-green);
+            color: var(--bg-dark);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        /* ── Responsive ───────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                height: auto;
+            }
+
+            .panel-left {
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Nav -->
+    <nav class="app-nav">
+        <div class="logo"><i class="fas fa-bolt"></i> Databoy</div>
+        <div class="nav-links-app">
+            <div class="nav-tab active" onclick="switchTab('revision', this)">
+                <i class="fas fa-brain"></i> Smart Revision
+            </div>
+            <div class="nav-tab" onclick="switchTab('roadmap', this)">
+                <i class="fas fa-map-signs"></i> Road Map
+            </div>
+        </div>
+    </nav>
+
+    <!-- Two-Panel Workspace -->
+    <div class="workspace">
+
+        <!-- ══ LEFT PANEL: Upload / Processing ══════════════════════ -->
+        <div class="panel panel-left" id="left-panel">
+
+            <!-- Smart Revision Upload -->
+            <div id="revision-upload" class="tab-content">
+                <div class="panel-header">
+                    <h2><i class="fas fa-file-pdf"></i> Smart Revision</h2>
+                    <p>Upload a past paper PDF — we'll extract every question and turn it into an interactive quiz.</p>
+                </div>
+
+                <div class="upload-zone" id="upload-zone">
+                    <input type="file" id="pdf-input" accept="application/pdf" onchange="handleFileUpload(event)">
+                    <div class="upload-icon-big"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <h3>Drop your Past Paper PDF here</h3>
+                    <p>or click to browse files</p>
+                    <div class="file-types">
+                        <span class="file-badge">PDF</span>
+                        <span class="file-badge">Max 20MB</span>
+                    </div>
+                </div>
+
+                <!-- Saved Quizzes Button -->
+                <button class="btn btn-secondary" onclick="showSavedQuizzes()" style="width:100%; margin-top:1rem;">
+                    <i class="fas fa-history"></i> View Saved Quizzes
+                </button>
+
+                <!-- Processing State -->
+                <div class="processing-state" id="processing-state">
+                    <div class="spinner-ring"></div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;" id="process-label">Initialising...</p>
+                    <div class="process-steps">
+                        <div class="process-step" id="step-upload"><i class="fas fa-upload"></i> Uploading PDF</div>
+                        <div class="process-step" id="step-docai"><i class="fas fa-eye"></i> Google Document AI OCR
+                        </div>
+                        <div class="process-step" id="step-parse"><i class="fas fa-code"></i> Parsing to JSON</div>
+                        <div class="process-step" id="step-quiz"><i class="fas fa-list-ol"></i> Building Quiz</div>
+                    </div>
+                </div>
+
+                <!-- File Info after upload -->
+                <div id="file-info" style="display:none; margin-top:1.5rem;">
+                    <div
+                        style="background: var(--bg-light); border-radius:10px; padding:1rem 1.2rem; display:flex; align-items:center; gap:1rem; border:1px solid rgba(100,255,218,0.2);">
+                        <i class="fas fa-file-pdf" style="color:var(--accent-green); font-size:1.5rem;"></i>
+                        <div style="flex:1;">
+                            <div id="file-name" style="font-weight:600; font-size:0.9rem;"></div>
+                            <div id="file-meta" style="font-size:0.8rem; color:var(--text-secondary);"></div>
+                        </div>
+                        <i class="fas fa-check-circle" style="color:var(--accent-green);"></i>
+                    </div>
+                    <button class="btn btn-secondary btn-full" onclick="resetUpload()" style="margin-top: 1rem;">
+                        <i class="fas fa-redo"></i> Upload Another
+                    </button>
+                </div>
+            </div>
+
+            <!-- Road Map Upload -->
+            <div id="roadmap-upload" class="tab-content" style="display:none;">
+                <div class="panel-header">
+                    <h2><i class="fas fa-map-signs"></i> Generate Road Map</h2>
+                    <p>Upload multiple sources — we'll rank topics by exam relevance using crowdsourced intelligence.
+                    </p>
+                </div>
+                <div class="roadmap-upload-area">
+                    <div class="source-card" id="src-notes">
+                        <input type="file" accept=".pdf,.doc,.docx,.txt"
+                            onchange="markSourceUploaded('src-notes', this)">
+                        <div class="source-icon"><i class="fas fa-sticky-note"></i></div>
+                        <div class="source-info">
+                            <h4>Student Notes</h4>
+                            <p>Your handwritten or typed notes</p>
+                        </div>
+                        <div class="source-status"><i class="fas fa-plus-circle"></i> Add</div>
+                    </div>
+                    <div class="source-card" id="src-lectures">
+                        <input type="file" accept=".pdf,.ppt,.pptx" onchange="markSourceUploaded('src-lectures', this)">
+                        <div class="source-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <div class="source-info">
+                            <h4>Lecture Slides</h4>
+                            <p>Professor's emphasis & outlines</p>
+                        </div>
+                        <div class="source-status"><i class="fas fa-plus-circle"></i> Add</div>
+                    </div>
+                    <div class="source-card" id="src-papers">
+                        <input type="file" accept="application/pdf" onchange="markSourceUploaded('src-papers', this)">
+                        <div class="source-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="source-info">
+                            <h4>Past Papers <span style="color:var(--accent-green);">*</span></h4>
+                            <p>The ground truth — required</p>
+                        </div>
+                        <div class="source-status"><i class="fas fa-plus-circle"></i> Add</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary btn-full" id="generate-roadmap-btn" disabled onclick="generateRoadMap()">
+                    <i class="fas fa-microchip"></i> Generate Road Map
+                </button>
+            </div>
+        </div>
+
+        <!-- ══ RIGHT PANEL: Quiz / Road Map Output ══════════════════ -->
+        <div class="panel panel-right" id="right-panel">
+
+            <!-- Quiz Output (default) -->
+            <div id="quiz-output" class="tab-content">
+                <!-- Empty state -->
+                <div class="quiz-empty-state" id="quiz-empty">
+                    <i class="fas fa-brain"></i>
+                    <h3 style="margin-bottom:0.5rem; color:var(--text-primary);">Quiz will appear here</h3>
+                    <p>Upload a past paper PDF on the left to generate your interactive quiz.</p>
+                </div>
+
+                <!-- Active Quiz -->
+                <div id="quiz-active" style="display:none;">
+                    <div class="quiz-header">
+                        <div>
+                            <div style="font-weight:700; font-size:1.1rem;">Active Quiz</div>
+                            <div class="quiz-progress" id="quiz-progress">Question 1 of 0</div>
+                        </div>
+                        <div class="quiz-score-badge" id="score-badge">Score: 0 / 0</div>
+                    </div>
+                    <div class="progress-bar-wrap">
+                        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="question-number" id="q-number">Question 1</div>
+                        <div class="question-text" id="q-text"></div>
+                        <div id="options-group"></div>
+                        <div class="feedback-box" id="feedback-box"></div>
+                    </div>
+
+                    <div class="quiz-nav">
+                        <button class="btn btn-secondary" id="prev-btn" onclick="prevQuestion()" style="display:none;">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <div style="flex:1;"></div>
+                        <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Screen -->
+                <div id="quiz-results" style="display:none;">
+                    <div class="results-screen">
+                        <div class="score-circle">
+                            <div class="score-num" id="final-score">0</div>
+                            <div class="score-label">correct</div>
+                        </div>
+                        <h2 style="margin-bottom:0.5rem;" id="results-title">Quiz Complete!</h2>
+                        <p style="color:var(--text-secondary); margin-bottom:2rem;" id="results-sub"></p>
+
+                        <div class="detailed-results-container">
+                            <h3 style="margin-bottom:1rem; color:var(--text-primary);">Detailed Results</h3>
+                            <div id="detailed-results" class="detailed-results"></div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="restartQuiz()" style="margin-top: 2rem;">
+                            <i class="fas fa-redo"></i> Retry Quiz
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Road Map Output -->
+            <div id="roadmap-output" class="tab-content" style="display:none;">
+                <div class="quiz-empty-state" id="roadmap-empty">
+                    <i class="fas fa-map-signs"></i>
+                    <h3 style="margin-bottom:0.5rem; color:var(--text-primary);">Road Map will appear here</h3>
+                    <p>Upload your sources on the left and click Generate Road Map.</p>
+                </div>
+                <div id="roadmap-results" style="display:none;">
+                    <div class="panel-header">
+                        <h2><i class="fas fa-trophy"></i> Exam Road Map</h2>
+                        <p>Topics ranked by exam relevance. Focus on the top ones first.</p>
+                    </div>
+                    <div id="roadmap-topic-list" class="roadmap-output"></div>
+                </div>
+            </div>
+
+            <!-- Saved Quizzes Modal -->
+            <div id="saved-quizzes-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center;">
+                <div style="background:var(--bg-light); border-radius:16px; padding:2rem; max-width:600px; max-height:80vh; overflow-y:auto; width:90%; border:1px solid rgba(100,255,218,0.2);">
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.5rem;">
+                        <h2 style="margin:0;"><i class="fas fa-history" style="color:var(--accent-green); margin-right:0.5rem;"></i>Saved Quizzes</h2>
+                        <button onclick="closeSavedQuizzes()" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:1.5rem;">×</button>
+                    </div>
+                    <div id="saved-quizzes-list" style="display:flex; flex-direction:column; gap:0.8rem;"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

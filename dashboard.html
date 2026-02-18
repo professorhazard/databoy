@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Databoy Dashboard | Start Learning Smart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ── Dashboard Styles ─────────────────────────────────────── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ── Navigation ──────────────────────────────────────────── */
+        .dashboard-nav {
+            background: var(--bg-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .dashboard-nav .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            text-decoration: none;
+        }
+
+        .dashboard-nav .logo i {
+            color: var(--accent-green);
+            font-size: 1.6rem;
+        }
+
+        .dashboard-nav .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .dashboard-nav .nav-link:hover {
+            color: var(--accent-green);
+        }
+
+        /* ── Main Container ──────────────────────────────────────── */
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* ── Header ──────────────────────────────────────────────── */
+        .dashboard-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #64ffda 0%, #64ffda 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dashboard-header p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ── Features Grid ───────────────────────────────────────── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* ── Feature Card ────────────────────────────────────────── */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(100, 255, 218, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent-green);
+            background: rgba(100, 255, 218, 0.05);
+            box-shadow: 0 8px 32px rgba(100, 255, 218, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .feature-card:hover::before {
+            top: -20%;
+            right: -20%;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            background: rgba(100, 255, 218, 0.1);
+            border-radius: 12px;
+        }
+
+        .feature-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card .badge {
+            display: inline-block;
+            background: rgba(100, 255, 218, 0.15);
+            color: var(--accent-green);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            margin-top: -0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list li {
+            color: var(--text-secondary);
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .feature-card .btn {
+            width: 100%;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+        }
+
+        .feature-card .btn-primary {
+            background: var(--accent-green);
+            color: var(--bg-dark);
+        }
+
+        .feature-card .btn-primary:hover {
+            background: #4dd9b4;
+            transform: scale(1.02);
+        }
+
+        /* ── D3 Engine Specific ──────────────────────────────────── */
+        .d3-badge {
+            font-size: 0.7rem;
+            vertical-align: super;
+        }
+
+        /* ── Modal ───────────────────────────────────────────────── */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .modal-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .modal-header i {
+            color: var(--accent-green);
+        }
+
+        /* ── Upload Zone ─────────────────────────────────────────── */
+        .upload-section {
+            margin-bottom: 2rem;
+        }
+
+        .upload-section h3 {
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .upload-zone {
+            border: 2px dashed rgba(100, 255, 218, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: rgba(100, 255, 218, 0.02);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.drag-over {
+            border-color: var(--accent-green);
+            background: rgba(100, 255, 218, 0.06);
+        }
+
+        .upload-zone input {
+            display: none;
+        }
+
+        .upload-zone i {
+            font-size: 2.5rem;
+            color: var(--accent-green);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .upload-zone p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .small-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        /* ── Tabs ────────────────────────────────────────────────── */
+        .d3-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--bg-dark);
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .d3-tab {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .d3-tab.active {
+            background: var(--bg-light);
+            color: var(--accent-green);
+        }
+
+        .d3-tab:hover {
+            color: var(--text-primary);
+        }
+
+        /* ── Uploaded Files List ─────────────────────────────────── */
+        .uploaded-files {
+            margin-top: 1.5rem;
+        }
+
+        .file-item {
+            background: var(--bg-dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+
+        .file-item-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-item-icon {
+            font-size: 1.5rem;
+            color: var(--accent-green);
+        }
+
+        .file-item-details {
+            flex: 1;
+        }
+
+        .file-item-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        .file-item-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .file-item-remove {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .file-item-remove:hover {
+            color: #ff6b6b;
+        }
+
+        /* ── Analysis Status ─────────────────────────────────────── */
+        .analysis-status {
+            background: rgba(100, 255, 218, 0.08);
+            border: 1px solid rgba(100, 255, 218, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .analysis-status i {
+            font-size: 2.5rem;
+            color: var(--accent-green);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .analysis-status p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .analysis-status .small-text {
+            margin-top: 0.5rem;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(100, 255, 218, 0.2);
+            border-top-color: var(--accent-green);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Footer ──────────────────────────────────────────────── */
+        .dashboard-footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 3rem;
+        }
+
+        /* ── Responsive ──────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="dashboard-nav">
+        <a href="index.html" class="logo">
+            <i class="fas fa-bolt"></i>
+            Databoy
+        </a>
+        <a href="index.html" class="nav-link">← Back to Home</a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1>Start Learning Smart</h1>
+            <p>Master exactly what examiners test. Cut study time in half with data-driven, exam-focused learning.</p>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <!-- Smart Revision Card -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h2>Smart Revision</h2>
+                <span class="badge">Active Learning</span>
+                <p>Transform past papers into interactive, auto-marked quizzes.</p>
+                <ul class="feature-list">
+                    <li>Upload past paper PDFs</li>
+                    <li>Auto-extracted questions</li>
+                    <li>Interactive quizzes</li>
+                    <li>Auto-marking with feedback</li>
+                    <li>Saved for unlimited practice</li>
+                </ul>
+                <button class="btn btn-primary" onclick="window.location.href='app_demo.html'">
+                    <i class="fas fa-arrow-right"></i> Start Revising
+                </button>
+            </div>
+
+            <!-- D³ Engine Card -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h2>D<span class="d3-badge">³</span> Engine</h2>
+                <span class="badge">AI-Powered</span>
+                <p>Data-driven learning engine that identifies what you actually need to study.</p>
+                <ul class="feature-list">
+                    <li>Analyzes course outlines</li>
+                    <li>Cross-references past exams</li>
+                    <li>Learns from student patterns</li>
+                    <li>Filters to essentials only</li>
+                    <li>Custom study plans</li>
+                </ul>
+                <button class="btn btn-primary" onclick="openD3Engine()">
+                    <i class="fas fa-brain"></i> Train Engine
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- D³ Engine Modal -->
+    <div class="modal" id="d3-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeD3Engine()">×</button>
+
+            <div class="modal-header">
+                <h2><i class="fas fa-brain"></i> D<span class="d3-badge">³</span> Engine Setup</h2>
+                <p>Train the engine with your course materials to get a personalized study plan</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="d3-tabs">
+                <button class="d3-tab active" onclick="switchD3Tab('documents')">
+                    <i class="fas fa-file"></i> Documents
+                </button>
+                <button class="d3-tab" onclick="switchD3Tab('lectures')">
+                    <i class="fas fa-book"></i> Lecture Notes
+                </button>
+                <button class="d3-tab" onclick="switchD3Tab('exams')">
+                    <i class="fas fa-graduation-cap"></i> Past Exams
+                </button>
+            </div>
+
+            <!-- Documents Tab -->
+            <div id="d3-documents" class="d3-content">
+                <div class="upload-section">
+                    <h3>Course Materials & Textbooks</h3>
+                    <div class="upload-zone" onclick="triggerUpload('documents')">
+                        <input type="file" id="document-input" accept=".pdf,.txt,.docx" multiple
+                            onchange="handleD3Upload('documents', event)">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p><strong>Click to upload</strong> or drag and drop</p>
+                        <p class="small-text">PDF, DOCX, TXT up to 50MB</p>
+                    </div>
+                    <div id="documents-list" class="uploaded-files"></div>
+                </div>
+            </div>
+
+            <!-- Lectures Tab -->
+            <div id="d3-lectures" class="d3-content" style="display:none;">
+                <div class="upload-section">
+                    <h3>Class Lecture Notes</h3>
+                    <div class="upload-zone" onclick="triggerUpload('lectures')">
+                        <input type="file" id="lectures-input" accept=".pdf,.txt,.docx" multiple
+                            onchange="handleD3Upload('lectures', event)">
+                        <i class="fas fa-book"></i>
+                        <p><strong>Click to upload</strong> or drag and drop</p>
+                        <p class="small-text">Your class notes, summaries, and handouts</p>
+                    </div>
+                    <div id="lectures-list" class="uploaded-files"></div>
+                </div>
+            </div>
+
+            <!-- Exams Tab -->
+            <div id="d3-exams" class="d3-content" style="display:none;">
+                <div class="upload-section">
+                    <h3>Past Exam Papers</h3>
+                    <div class="upload-zone" onclick="triggerUpload('exams')">
+                        <input type="file" id="exams-input" accept=".pdf,.txt,.docx" multiple
+                            onchange="handleD3Upload('exams', event)">
+                        <i class="fas fa-graduation-cap"></i>
+                        <p><strong>Click to upload</strong> or drag and drop</p>
+                        <p class="small-text">Previous year exam papers and answer sheets</p>
+                    </div>
+                    <div id="exams-list" class="uploaded-files"></div>
+                </div>
+            </div>
+
+            <!-- Analysis Section -->
+            <div id="d3-analysis" style="display:none;">
+                <div class="analysis-status">
+                    <div class="spinner"></div>
+                    <p><strong>Analyzing your materials...</strong></p>
+                    <p class="small-text">The D³ Engine is identifying patterns and filtering relevant content</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display:flex; gap:1rem; margin-top:2rem;">
+                <button class="btn btn-primary" onclick="trainD3Engine()"
+                    style="flex:1; padding:1rem; background:var(--accent-green); color:var(--bg-dark); border:none; border-radius:8px; cursor:pointer; font-weight:600;">
+                    <i class="fas fa-play"></i> Train Engine
+                </button>
+                <button class="btn btn-secondary" onclick="closeD3Engine()"
+                    style="flex:1; padding:1rem; background:rgba(255,255,255,0.1); color:var(--text-primary); border:none; border-radius:8px; cursor:pointer; font-weight:600;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="dashboard-footer">
+        <p>&copy; 2026 Databoy. Study smarter, pass faster.</p>
+    </div>
+
+    <script>
+        // D³ Engine State
+        const d3State = {
+            documents: [],
+            lectures: [],
+            exams: [],
+            currentTab: 'documents'
+        };
+
+        // Switch D³ Tabs
+        window.switchD3Tab = function (tab) {
+            d3State.currentTab = tab;
+
+            // Hide all contents
+            document.querySelectorAll('.d3-content').forEach(el => el.style.display = 'none');
+            // Show active
+            document.getElementById(`d3-${tab}`).style.display = 'block';
+
+            // Update tab styles
+            document.querySelectorAll('.d3-tab').forEach(el => el.classList.remove('active'));
+            event.target.closest('.d3-tab').classList.add('active');
+        };
+
+        // Open D³ Modal
+        window.openD3Engine = function () {
+            document.getElementById('d3-modal').classList.add('active');
+        };
+
+        // Close D³ Modal
+        window.closeD3Engine = function () {
+            document.getElementById('d3-modal').classList.remove('active');
+        };
+
+        // Trigger file input
+        window.triggerUpload = function (type) {
+            document.getElementById(`${type}-input`).click();
+        };
+
+        // Handle D³ Upload
+        window.handleD3Upload = function (type, event) {
+            const files = event.target.files;
+            const fileArray = Array.from(files);
+
+            fileArray.forEach(file => {
+                if (!d3State[type]) d3State[type] = [];
+                d3State[type].push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    file: file
+                });
+            });
+
+            updateD3FileList(type);
+        };
+
+        // Update D³ file list display
+        window.updateD3FileList = function (type) {
+            const listEl = document.getElementById(`${type}-list`);
+            listEl.innerHTML = '';
+
+            d3State[type].forEach((file, idx) => {
+                const sizeKB = (file.size / 1024).toFixed(1);
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                item.innerHTML = `
+                    <div class="file-item-info">
+                        <div class="file-item-icon"><i class="fas fa-file"></i></div>
+                        <div class="file-item-details">
+                            <div class="file-item-name">${file.name}</div>
+                            <div class="file-item-meta">${sizeKB} KB</div>
+                        </div>
+                    </div>
+                    <button class="file-item-remove" onclick="removeD3File('${type}', ${idx})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                listEl.appendChild(item);
+            });
+        };
+
+        // Remove D³ file
+        window.removeD3File = function (type, idx) {
+            d3State[type].splice(idx, 1);
+            updateD3FileList(type);
+        };
+
+        // Train D³ Engine
+        window.trainD3Engine = async function () {
+            const totalFiles = d3State.documents.length + d3State.lectures.length + d3State.exams.length;
+
+            if (totalFiles === 0) {
+                alert('Please upload at least one document to train the engine.');
+                return;
+            }
+
+            // Show analysis
+            document.getElementById('d3-analysis').style.display = 'block';
+
+            try {
+                const formData = new FormData();
+
+                // Add all files
+                d3State.documents.forEach(f => formData.append('documents', f.file));
+                d3State.lectures.forEach(f => formData.append('lectures', f.file));
+                d3State.exams.forEach(f => formData.append('exams', f.file));
+
+                const response = await fetch('/api/d3-engine/train', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    setTimeout(() => {
+                        alert(`✓ D³ Engine trained with ${totalFiles} documents!\n\nIdentified key topics:\n${result.topics.slice(0, 5).join('\n')}`);
+                        closeD3Engine();
+                    }, 2000);
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (err) {
+                alert('Error training engine: ' + err.message);
+                document.getElementById('d3-analysis').style.display = 'none';
+            }
+        };
+
+        // Modal close on background click
+        document.getElementById('d3-modal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'd3-modal') closeD3Engine();
+        });
+    </script>
+</body>
+
+</html>
